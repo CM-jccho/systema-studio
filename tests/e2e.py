@@ -220,6 +220,30 @@ def main():
             check("key not saved without consent", page.evaluate("localStorage.getItem('systema.studio.keys.v1')") is None)
             page.unroute("https://api.openai.com/v1/chat/completions")
 
+            # 11c. Anthropic path uses the browser-access header and parses content blocks
+            captured.clear()
+
+            def handle_anthropic(route):
+                captured["key"] = route.request.headers.get("x-api-key", "")
+                captured["version"] = route.request.headers.get("anthropic-version", "")
+                captured["browser"] = route.request.headers.get("anthropic-dangerous-direct-browser-access", "")
+                route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"content": [{"type": "text", "text": "[재무] 남은 반론: 단위 마진이 낮다."}]}),
+                )
+
+            page.route("https://api.anthropic.com/v1/messages", handle_anthropic)
+            page.get_by_role("button", name="Anthropic").click()
+            page.fill(".byok input[type=password]", "sk-ant-test-only")
+            page.get_by_role("button", name="AI로 검증 실행").click()
+            page.wait_for_timeout(700)
+            check("anthropic output rendered", "단위 마진" in page.locator(".byok-output").inner_text())
+            check("anthropic key header", captured.get("key") == "sk-ant-test-only")
+            check("anthropic browser access header", captured.get("browser") == "true")
+            check("anthropic version header", captured.get("version") == "2023-06-01")
+            page.unroute("https://api.anthropic.com/v1/messages")
+
             # 12. delete with confirmation
             before = page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length")
             page.locator(".workhead-actions button", has_text="삭제").click()
