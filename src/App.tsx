@@ -398,7 +398,7 @@ export default function App() {
                   <button type="button" className="btn btn-quiet" onClick={duplicateActive}>
                     {c.app.duplicate}
                   </button>
-                  <DeleteButton onDelete={deleteActive} locale={locale} />
+                  <DeleteButton key={active.id} onDelete={deleteActive} locale={locale} />
                 </div>
               </div>
 
@@ -535,7 +535,14 @@ function DeleteButton({ onDelete, locale }: { onDelete: () => void; locale: Loca
   return (
     <span className="confirm">
       <span className="confirm-text">{c.workspace.deleteConfirm}</span>
-      <button type="button" className="btn btn-danger" onClick={onDelete}>
+      <button
+        type="button"
+        className="btn btn-danger"
+        onClick={() => {
+          setConfirming(false);
+          onDelete();
+        }}
+      >
         {c.workspace.deleteForever}
       </button>
       <button type="button" className="btn btn-quiet" onClick={() => setConfirming(false)}>

@@ -251,6 +251,7 @@ def main():
             page.wait_for_timeout(200)
             after = page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length")
             check("delete removes one system", after == before - 1, f"{before}->{after}")
+            check("confirmation does not carry to the next system", page.locator(".confirm").count() == 0)
 
             # 13. mobile selector and overflow
             page.set_viewport_size({"width": 390, "height": 844})

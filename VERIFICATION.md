@@ -5,7 +5,7 @@
 | Check | Result |
 |---|---|
 | `npm run build` (tsc --noEmit + vite build) | pass |
-| `tests/e2e.py` (Playwright, production build) | 48 / 48 |
+| `tests/e2e.py` (Playwright, production build) | 49 / 49 |
 | `tests/astryx.py` (accessibility, security, responsive) | 25 / 25 |
 | Hallmark `sloplint.mjs src --scope app --genre editorial` | 0 FAIL, 0 REFLEX, 0 WARN |
 | Hallmark render tier on the live URL (1280, 1440, 1920, 375) | 0 FAIL, 0 REFLEX, 0 WARN |
