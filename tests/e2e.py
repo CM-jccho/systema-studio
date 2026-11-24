@@ -90,6 +90,14 @@ def main():
             page.wait_for_timeout(150)
             check("coverage counts filled fields", page.locator(".coverage-value").inner_text().strip() == "2 / 4")
 
+            # 3b. tab keyboard navigation
+            page.focus("#tab-context")
+            page.keyboard.press("ArrowRight")
+            page.wait_for_timeout(150)
+            check("arrow keys move tabs", page.locator("#tab-rulebook").get_attribute("aria-selected") == "true")
+            page.click("#tab-context")
+            page.wait_for_timeout(100)
+
             # 4. rulebook
             page.click("#tab-rulebook")
             check("empty state before rules", page.locator(".empty-title").count() == 1)
@@ -156,10 +164,22 @@ def main():
             check("import adds a system", page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length") == 5)
             check("imported system is active", page.locator(".title-input").input_value() == "테스트 업무 시스템")
 
+            # 8b. malformed import is rejected
+            page.click("#tab-export")
+            page.wait_for_timeout(200)
+            bad = os.path.join(ROOT, ".tmp-bad.json")
+            open(bad, "w", encoding="utf-8").write('{"hello": 1}')
+            page.set_input_files(".file-input", bad)
+            page.wait_for_timeout(400)
+            check("malformed json rejected", "읽을 수 없습니다" in page.locator(".toast").inner_text())
+            os.remove(bad)
+
             # 9. language switch
             page.get_by_role("button", name="EN").click()
             page.wait_for_timeout(200)
             check("english tab labels", page.locator("#tab-context").inner_text() == "Context")
+            page.click("#tab-context")
+            page.wait_for_timeout(150)
             check("english section heading", page.locator(".section-intro h2").first.inner_text() == "Context box")
             page.get_by_role("button", name="한국어").click()
             page.wait_for_timeout(150)
@@ -177,6 +197,28 @@ def main():
             page.get_by_role("button", name="AI로 검증 실행").click()
             page.wait_for_timeout(150)
             check("missing key is reported", "API 키를" in page.locator(".byok .error-line").inner_text())
+
+            # 11b. BYOK request is well formed and the key is not persisted without consent
+            captured = {}
+
+            def handle_route(route):
+                captured["auth"] = route.request.headers.get("authorization", "")
+                captured["body"] = json.loads(route.request.post_data or "{}")
+                route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps({"choices": [{"message": {"content": "[고객] 남은 반론: 가격 근거가 약하다."}}]}),
+                )
+
+            page.route("https://api.openai.com/v1/chat/completions", handle_route)
+            page.fill(".byok input[type=password]", "sk-test-only")
+            page.get_by_role("button", name="AI로 검증 실행").click()
+            page.wait_for_timeout(700)
+            check("byok output rendered", "남은 반론" in page.locator(".byok-output").inner_text())
+            check("byok sends bearer key", captured.get("auth") == "Bearer sk-test-only")
+            check("byok sends a four-lens prompt", "고객" in json.dumps(captured.get("body", {}), ensure_ascii=False))
+            check("key not saved without consent", page.evaluate("localStorage.getItem('systema.studio.keys.v1')") is None)
+            page.unroute("https://api.openai.com/v1/chat/completions")
 
             # 12. delete with confirmation
             before = page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length")

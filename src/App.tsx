@@ -236,6 +236,20 @@ export default function App() {
     notify(ok ? c.exportTab.copied : c.app.cancel);
   };
 
+  const onTabKey = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    const index = tabs.indexOf(tab);
+    let next: Tab | null = null;
+    if (event.key === "ArrowRight") next = tabs[(index + 1) % tabs.length];
+    else if (event.key === "ArrowLeft") next = tabs[(index - 1 + tabs.length) % tabs.length];
+    else if (event.key === "Home") next = tabs[0];
+    else if (event.key === "End") next = tabs[tabs.length - 1];
+    if (next) {
+      event.preventDefault();
+      setTab(next);
+      document.getElementById(`tab-${next}`)?.focus();
+    }
+  };
+
   const tabLabel: Record<Tab, string> = {
     context: c.nav.context,
     rulebook: c.nav.rulebook,
@@ -289,7 +303,7 @@ export default function App() {
       <div className={`shell${view === "workspace" && active ? "" : " shell-wide"}`}>
         <aside className="rail" aria-label={c.rail.systems}>
           <div className="rail-head">
-            <h2 className="rail-title">{c.rail.systems}</h2>
+            <p className="rail-title">{c.rail.systems}</p>
             <span className="count">{store.systems.length}</span>
           </div>
           <button
@@ -357,6 +371,7 @@ export default function App() {
             <>
               <div className="workhead">
                 <div className="workhead-fields">
+                  <h1 className="sr-only">{pick(active.name, locale) || c.workspace.untitled}</h1>
                   <input
                     className="title-input"
                     value={pick(active.name, locale)}
@@ -397,7 +412,9 @@ export default function App() {
                     aria-selected={tab === item}
                     aria-controls={`panel-${item}`}
                     className={`tab${tab === item ? " is-active" : ""}`}
+                    tabIndex={tab === item ? 0 : -1}
                     onClick={() => setTab(item)}
+                    onKeyDown={onTabKey}
                   >
                     {tabLabel[item]}
                   </button>

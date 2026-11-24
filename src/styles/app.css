@@ -1,9 +1,12 @@
 /* Layout and components for SYSTEMA Studio. Tokens live in tokens.css. */
 
 .skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 0;
+  position: fixed;
+  left: var(--space-3);
+  top: -4rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   z-index: 60;
   padding: var(--space-2) var(--space-3);
   background: var(--ink);
@@ -12,7 +15,6 @@
 }
 
 .skip-link:focus {
-  left: var(--space-3);
   top: var(--space-3);
 }
 
@@ -82,6 +84,7 @@
 }
 
 .lang-btn {
+  white-space: nowrap;
   border: 0;
   background: var(--paper);
   color: var(--ink-2);
@@ -188,7 +191,7 @@
   flex-direction: column;
   gap: 2px;
   text-align: left;
-  padding: 0.55rem 0.6rem 0.6rem;
+  padding: 0.3rem 0.6rem 0.35rem;
   border: 0;
   border-left: 2px solid transparent;
   background: transparent;
@@ -208,12 +211,13 @@
 .system-name {
   font-size: var(--text-base);
   font-weight: 550;
-  line-height: 1.35;
+  line-height: 1.3;
   overflow-wrap: break-word;
 }
 
 .system-meta {
   font-size: var(--text-xs);
+  line-height: 1.3;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -242,6 +246,7 @@
 /* buttons */
 
 .btn {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -324,6 +329,9 @@
 }
 
 .link-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
   border: 0;
   background: none;
   padding: 0;
@@ -384,7 +392,7 @@
   display: block;
   width: 100%;
   border: 0;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--ink-3);
   background: transparent;
   color: var(--ink);
   font-size: var(--text-2xl);
@@ -407,14 +415,15 @@
 .purpose-input {
   display: block;
   width: 100%;
-  margin-top: var(--space-2);
+  min-height: 2rem;
+  margin-top: var(--space-1);
   border: 0;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--field-line);
   background: transparent;
   color: var(--ink-2);
   font-size: var(--text-base);
   line-height: 1.5;
-  padding: 0 0 0.15rem;
+  padding: var(--space-1) 0 0.15rem;
 }
 
 .purpose-input:hover {
@@ -633,7 +642,7 @@
 
 .input {
   width: 100%;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius);
   background: var(--paper-raised);
   padding: var(--space-2) var(--space-3);
@@ -709,17 +718,11 @@
 .select {
   min-height: 2.25rem;
   padding: 0.35rem 1.8rem 0.35rem 0.6rem;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius);
   background: var(--paper-raised);
   color: var(--ink);
   font-size: var(--text-sm);
-  appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
-    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
-  background-position: calc(100% - 0.95rem) 55%, calc(100% - 0.65rem) 55%;
-  background-size: 0.3rem 0.3rem;
-  background-repeat: no-repeat;
 }
 
 .select:hover {
@@ -1693,8 +1696,8 @@
   flex: 1;
   min-height: 8rem;
   max-height: none;
-  font-size: 0.68rem;
-  line-height: 1.7;
+  font-size: 0.72rem;
+  line-height: 1.65;
   background: var(--paper-raised);
 }
 
@@ -2160,6 +2163,45 @@
     grid-column: 2;
     justify-self: start;
     margin-top: var(--space-2);
+  }
+}
+
+@media (max-width: 24rem) {
+  .topbar {
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .lang-btn {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+
+  .topbar-actions {
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 56rem) {
+  .btn,
+  .link-btn,
+  .lang-btn,
+  .select,
+  .input,
+  .tab,
+  .format-btn,
+  .seg-btn,
+  .filter {
+    min-height: 2.75rem;
+  }
+
+  .title-input,
+  .purpose-input {
+    min-height: 2.75rem;
   }
 }
 

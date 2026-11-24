@@ -240,7 +240,7 @@ const ko = {
     intro: "무료 스튜디오의 세 가지 프리셋을 직무별 12종으로 확장한 한국어와 영어 팩입니다. 각 시스템은 컨텍스트, 규칙, 네 관점 검증, 내보내기 프롬프트를 같은 형식으로 담습니다.",
     included: "구성",
     includedItems: [
-      "직무별 업무 시스템 10종 (한국어와 영어)",
+      "직무별 업무 시스템 12종 (한국어와 영어)",
       "각 시스템의 컨텍스트, 규칙, 검증 체크리스트",
       "Markdown 원본과 JSON 가져오기 파일",
       "Notion 복사 가이드",
@@ -552,7 +552,7 @@ const en: Copy = {
     intro: "The three presets in this studio, extended to twelve role-based systems in Korean and English. Each one carries context, rules, four-perspective reviews and an export prompt in the same format.",
     included: "Inside",
     includedItems: [
-      "10 role-based work systems in Korean and English",
+      "12 role-based work systems in Korean and English",
       "Context, rules and review checklists for each system",
       "Markdown source and JSON import files",
       "Notion copy guide",

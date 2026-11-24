@@ -2,6 +2,7 @@ node_modules/
 dist/
 pro-pack/
 screenshots/
+.hallmark/
 .tmp/
 *.log
 .DS_Store

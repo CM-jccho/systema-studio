@@ -29,6 +29,7 @@
   --ink-3: oklch(52% 0.012 220);
   --line: oklch(88.5% 0.007 200);
   --line-2: oklch(78% 0.009 200);
+  --field-line: oklch(62% 0.012 210);
   --accent: oklch(42% 0.06 168);
   --accent-2: oklch(52% 0.07 168);
   --accent-pale: oklch(94.5% 0.018 168);
