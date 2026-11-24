@@ -18,6 +18,7 @@
 | `tests/e2e.py` (Playwright, production build) | 89 / 89 |
 | `tests/astryx.py` (accessibility, security, heading order, contrast, touch) | 32 / 32 |
 | Hallmark `sloplint.mjs src --scope app --genre editorial` | 0 FAIL, 0 REFLEX, 0 WARN |
+| Live feature checks (Playwright, https://cm-jccho.github.io/systema-studio/) | 19 / 19 |
 | Live console errors | 0 |
 | Live failed requests | 0 |
 | Horizontal overflow 320 to 1920 | 0 px |
@@ -37,3 +38,5 @@ No `dangerouslySetInnerHTML`, StrictMode, error boundary, reduced-motion fallbac
 - The BYOK calls in tests are mocked at the browser route; no real API spend occurred.
 - Fonts are self-hosted (Pretendard OFL, Instrument Serif OFL). There are no analytics, trackers or cookies.
 - Prices in the Pro modal were taken from both store pages on 2026-11-24 and are unchanged here.
+- Live checks built the comparison prompt, added two rules, scored 41 rubric items, recorded and reloaded a trial, copied and downloaded `SKILL.md`, and ran at 390 px without overflow. Screenshots: `screenshots/live-final-patterns-1440.png`, `live-final-evaluator-1440.png`, `live-final-skill-1440.png`, `live-final-patterns-390.png`, `live-final-evaluator-390.png`, `live-final-skill-390.png`, with English versions at `live-final-*-en-1440.png`.
+- The deployed build is `index-CsxpGbuF.js` and `index-czAAM9tq.css`; `main` and `gh-pages` both carry this version.
