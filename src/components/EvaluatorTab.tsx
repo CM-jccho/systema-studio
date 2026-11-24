@@ -149,7 +149,7 @@ export function EvaluatorTab({ system, locale, notify, onRecord, onDelete }: Pro
             <span className="figure-of">/{formatNumber(items.length, locale)}</span>
           </span>
           <span className="figure-label">
-            {c.evaluator.passed}, {c.evaluator.failed} {failed}
+            {c.evaluator.passed} {passed}, {c.evaluator.failed} {failed}
           </span>
         </div>
         <div className="figure">
