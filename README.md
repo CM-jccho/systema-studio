@@ -42,7 +42,7 @@ Vite 6, React 19, TypeScript. 폰트는 Pretendard(OFL)와 Instrument Serif(OFL)
 ## 테스트
 
 ```bash
-python3 tests/e2e.py     # 88 checks: CRUD, rules, patterns, reviews, evaluator, export, SKILL.md, import, i18n, pro modal, persistence, responsive
+python3 tests/e2e.py     # 89 checks: CRUD, rules, patterns, reviews, evaluator, export, SKILL.md, import, i18n, pro modal, persistence, responsive
 python3 tests/astryx.py  # 32 checks: a11y, contrast, focus, touch targets, heading order on every tab, CSP, local-only
 python3 tools/shoot.py   # desktop and mobile screenshots
 ```

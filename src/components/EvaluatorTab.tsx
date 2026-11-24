@@ -114,6 +114,7 @@ export function EvaluatorTab({ system, locale, notify, onRecord, onDelete }: Pro
 
   const chart = chronological.slice(-8);
   const history = [...system.evaluations].sort((a, b) => b.at - a.at);
+  const latest = history[0] ?? null;
 
   const groupLabel = (group: Group): string =>
     group === "rule" ? c.evaluator.groupRules : c.redteam.perspectives[group];
@@ -139,7 +140,7 @@ export function EvaluatorTab({ system, locale, notify, onRecord, onDelete }: Pro
         <div className="figure">
           <span className="figure-value eval-score">{score}%</span>
           <span className="figure-label">
-            {c.evaluator.score}, {c.verdicts[verdict]}
+            {judged ? `${c.evaluator.score}, ${c.verdicts[verdict]}` : c.evaluator.score}
           </span>
         </div>
         <div className="figure">
@@ -159,6 +160,14 @@ export function EvaluatorTab({ system, locale, notify, onRecord, onDelete }: Pro
           <span className="figure-label">{c.evaluator.judged}</span>
         </div>
       </div>
+
+      {!judged && latest ? (
+        <p className="muted-line eval-last">
+          {c.evaluator.lastTrial} {latest.score}%, {stamp(latest.at, locale)}
+        </p>
+      ) : null}
+
+      <p className="section-note">{c.evaluator.scoreRule}</p>
 
       <section className="eval-section" aria-labelledby="rubric-title">
         <div className="preview-head">

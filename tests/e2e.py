@@ -315,6 +315,7 @@ def main():
             page.click("#tab-evaluator")
             page.wait_for_timeout(300)
             check("history renders after reload", page.locator(".trial-row").count() == 2)
+            check("last trial shown when unmarked", "최근 기록" in page.locator(".eval-last").inner_text() and "100%" in page.locator(".eval-last").inner_text())
             page.click("#tab-patterns")
             page.wait_for_timeout(300)
             check("pattern cases render after reload", "A사 제안서" in page.locator("#pattern-good").input_value())

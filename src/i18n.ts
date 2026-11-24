@@ -180,6 +180,8 @@ const ko = {
     delete: "이 회차 지우기",
     confirm: "삭제할까요?",
     noRules: "활성 규칙이 없습니다. 규칙서에서 먼저 규칙을 켜 두면 루브릭에 들어갑니다.",
+    lastTrial: "최근 기록",
+    scoreRule: "점수 = 통과 항목 ÷ 전체 항목 × 100. 채점하지 않은 항목은 통과로 보지 않습니다. 90 이상 통과, 70~89 조건부, 70 미만 재작업입니다.",
   },
   skill: {
     title: "스킬 파일 (SKILL.md)",
@@ -689,6 +691,8 @@ const en: Copy = {
     delete: "Delete this trial",
     confirm: "Delete?",
     noRules: "No active rules. Turn a rule on in the Rulebook and it joins the rubric.",
+    lastTrial: "Last trial",
+    scoreRule: "Score = passed items ÷ total items × 100. Unmarked items do not count as passed. 90 and above: pass. 70 to 89: conditional. Below 70: rework.",
   },
   skill: {
     title: "Skill file (SKILL.md)",

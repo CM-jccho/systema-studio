@@ -2497,6 +2497,10 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.eval-last {
+  margin-top: calc(var(--space-2) * -1);
+}
+
 .figure-of {
   font-family: var(--font-ui);
   font-size: var(--text-base);

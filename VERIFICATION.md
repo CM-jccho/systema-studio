@@ -6,7 +6,7 @@
 
 - **SKILL.md export.** The Export tab now carries a second block that turns the system into an official Agent Skills file: YAML frontmatter (`name`, `description`), Context, Rules, Red-team verification with the four-lens checks, and an Evaluator rubric table with the scoring rule. Preview, clipboard copy, and one-click `SKILL.md` download. The skill name is an ASCII slug derived from the English name, because skill names cannot carry Hangul.
 - **Pattern extractor (level 2).** A new `패턴` tab holds the two cases (what worked, what did not) and an optional difference you already know, all saved per system in local storage. It builds a comparison prompt that asks for a `DIFFERENCES` block then a `RULES` block, with a check in parentheses for each rule. The answer is pasted back, parsed line by line under `RULES`, stripped of bullets and check notes, guessed into a category, deduplicated against existing rules, and added to the Rulebook in one click. The cases and the pasted answer survive a reload.
-- **Evaluator and test log (level 3).** A new `평가` tab builds a rubric from the active rules plus the four-lens checklist (base checks and the preset's own checks). Each item is marked pass or fail, the score is `passed ÷ total × 100` with a verdict (90 pass, 70 conditional, below 70 rework), and a revision memo is recorded with the trial. Trials are kept per system in local storage (newest 50), shown as a bar chart and a list with the delta against the previous trial and a two-step delete. Marks stay after a save so the score does not collapse.
+- **Evaluator and test log (level 3).** A new `평가` tab builds a rubric from the active rules plus the four-lens checklist (base checks and the preset's own checks). Each item is marked pass or fail, the score is `passed ÷ total × 100` with a verdict (90 pass, 70 conditional, below 70 rework), and a revision memo is recorded with the trial. Trials are kept per system in local storage (newest 50), shown as a bar chart and a list with the delta against the previous trial and a two-step delete. Marks stay after a save so the score does not collapse; when a reload clears the marks, the figures show the last recorded trial instead of an empty 0%.
 - Both new tabs and the skill block are bilingual (KO/EN); the tabs sit between Rulebook and Redteam (Patterns) and Redteam and Export (Evaluator), with arrow-key tab navigation extended to seven tabs.
 - Stored data stays compatible: `patterns` and `evaluations` are optional fields normalized on load, and JSON import fills them when a file predates this version. Duplicating a system clears its trials, like its reviews.
 
@@ -15,7 +15,7 @@
 | Check | Result |
 |---|---|
 | `npm run build` (tsc --noEmit + vite build) | pass |
-| `tests/e2e.py` (Playwright, production build) | 88 / 88 |
+| `tests/e2e.py` (Playwright, production build) | 89 / 89 |
 | `tests/astryx.py` (accessibility, security, heading order, contrast, touch) | 32 / 32 |
 | Hallmark `sloplint.mjs src --scope app --genre editorial` | 0 FAIL, 0 REFLEX, 0 WARN |
 | Live console errors | 0 |
@@ -25,7 +25,7 @@
 
 ## E2E coverage
 
-Preset seeding, Korean first load, bilingual switch and persistence, blank system creation, context coverage, tab keyboard navigation, rule add / toggle / edit / version note / history, **pattern prompt carrying both cases and the RULES block, prompt copy, candidate parsing with check-note stripping, adding two rules and their duplicate flags, rulebook reflecting them**, four-lens review record, **evaluator rubric count, unmarked start, pass/fail marking, score percentage, fail-row flag, memo saved with the trial, local-storage payload, bar chart, mark-all, second trial and delta**, growth pass count and level, export preview, clipboard, Markdown and JSON downloads, **SKILL.md frontmatter, slug validity, four sections, rubric table, clipboard and `SKILL.md` download**, JSON import, malformed JSON rejection, BYOK missing-key guard, OpenAI and Anthropic request shapes, key not persisted without consent, delete confirmation, mobile system selector, Pro modal and its how-to, responsive overflow, console errors.
+Preset seeding, Korean first load, bilingual switch and persistence, blank system creation, context coverage, tab keyboard navigation, rule add / toggle / edit / version note / history, **pattern prompt carrying both cases and the RULES block, prompt copy, candidate parsing with check-note stripping, adding two rules and their duplicate flags, rulebook reflecting them**, four-lens review record, **evaluator rubric count, unmarked start, pass/fail marking, score percentage, fail-row flag, memo saved with the trial, local-storage payload, bar chart, mark-all, second trial and delta**, growth pass count and level, export preview, clipboard, Markdown and JSON downloads, **SKILL.md frontmatter, slug validity, four sections, rubric table, clipboard and `SKILL.md` download**, last-trial line after reload, JSON import, malformed JSON rejection, BYOK missing-key guard, OpenAI and Anthropic request shapes, key not persisted without consent, delete confirmation, mobile system selector, Pro modal and its how-to, responsive overflow, console errors.
 
 ## Astryx coverage
 
