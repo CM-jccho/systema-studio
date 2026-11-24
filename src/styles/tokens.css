@@ -1,0 +1,160 @@
+/* Hallmark · shape: app screen · genre: editorial · scope: app · theme: "Work Ledger" · fonts: Pretendard, Instrument Serif
+ * pre-emit critique: P4 H4 E5 S4 R4 V4 · weakest: S, a workspace could read as any note tool; led with the live AI package and the numbered rule ledger
+ * built: Hallmark v2.0.0 · scope: app */
+
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("../assets/fonts/pretendard-variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../assets/fonts/instrument-serif-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --paper: oklch(97.4% 0.005 155);
+  --paper-raised: oklch(98.6% 0.004 155);
+  --paper-2: oklch(95.6% 0.006 155);
+  --paper-3: oklch(92.8% 0.008 155);
+  --ink: oklch(23.5% 0.015 220);
+  --ink-hover: oklch(30% 0.018 220);
+  --ink-2: oklch(42% 0.014 220);
+  --ink-3: oklch(52% 0.012 220);
+  --line: oklch(88.5% 0.007 200);
+  --line-2: oklch(78% 0.009 200);
+  --accent: oklch(42% 0.06 168);
+  --accent-2: oklch(52% 0.07 168);
+  --accent-pale: oklch(94.5% 0.018 168);
+  --danger: oklch(48% 0.13 28);
+  --warn: oklch(48% 0.1 60);
+  --overlay: oklch(20% 0.02 220 / 0.38);
+
+  --font-ui: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic",
+    "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-code: "SFMono-Regular", ui-monospace, "Menlo", "Consolas", monospace;
+
+  --text-xs: 0.72rem;
+  --text-sm: 0.79rem;
+  --text-base: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.19rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-figure: 2.5rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius: 2px;
+  --radius-lg: 3px;
+
+  --dur-micro: 120ms;
+  --dur-short: 180ms;
+
+  --rail-w: 15.5rem;
+  --aside-w: 23rem;
+  --maxw: 97.5rem;
+  --topbar-h: 3.5rem;
+  --gutter: clamp(1rem, 2vw, 2rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--paper);
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: "ss06" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+::selection {
+  background: var(--accent-pale);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
