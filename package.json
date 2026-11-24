@@ -1,7 +1,7 @@
 {
   "name": "systema-studio",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "SYSTEMA Studio — personal work operating system (Context Box + Rulebook + Redteam)",
   "scripts": {

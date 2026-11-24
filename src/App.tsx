@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ExportFormat, Locale, Rule, Store, WorkSystem } from "./types";
+import type { Evaluation, ExportFormat, Locale, PatternNotes, Rule, Store, WorkSystem } from "./types";
 import { copy as copyTable, pick } from "./i18n";
 import {
   blankSystem,
@@ -12,15 +12,17 @@ import { copyText } from "./utils";
 import { relativeDay } from "./mastery";
 import { ContextTab } from "./components/ContextTab";
 import { RulebookTab } from "./components/RulebookTab";
+import { PatternsTab } from "./components/PatternsTab";
 import { RedteamTab } from "./components/RedteamTab";
+import { EvaluatorTab } from "./components/EvaluatorTab";
 import { ExportTab } from "./components/ExportTab";
 import { GrowthTab } from "./components/GrowthTab";
 import { ProModal } from "./components/ProModal";
 import { NewSystemView } from "./components/NewSystemView";
 import { Icon } from "./components/ui";
 
-type Tab = "context" | "rulebook" | "redteam" | "export" | "growth";
-const tabs: Tab[] = ["context", "rulebook", "redteam", "export", "growth"];
+type Tab = "context" | "rulebook" | "patterns" | "redteam" | "evaluator" | "export" | "growth";
+const tabs: Tab[] = ["context", "rulebook", "patterns", "redteam", "evaluator", "export", "growth"];
 
 function parseHash(): { id: string | null; tab: Tab } {
   const match = window.location.hash.match(/^#\/s\/([^/]+)(?:\/(\w+))?/);
@@ -140,6 +142,39 @@ export default function App() {
     }));
   }, []);
 
+  const addRules = useCallback((rules: Rule[]) => {
+    setStore((prev) => ({
+      ...prev,
+      systems: prev.systems.map((system) =>
+        system.id === prev.activeId
+          ? { ...system, updatedAt: Date.now(), rules: [...rules, ...system.rules] }
+          : system,
+      ),
+    }));
+  }, []);
+
+  const addEvaluation = useCallback((evaluation: Evaluation) => {
+    setStore((prev) => ({
+      ...prev,
+      systems: prev.systems.map((system) =>
+        system.id === prev.activeId
+          ? { ...system, updatedAt: Date.now(), evaluations: [evaluation, ...system.evaluations].slice(0, 50) }
+          : system,
+      ),
+    }));
+  }, []);
+
+  const deleteEvaluation = useCallback((evaluationId: string) => {
+    setStore((prev) => ({
+      ...prev,
+      systems: prev.systems.map((system) =>
+        system.id === prev.activeId
+          ? { ...system, updatedAt: Date.now(), evaluations: system.evaluations.filter((item) => item.id !== evaluationId) }
+          : system,
+      ),
+    }));
+  }, []);
+
   const deleteRule = useCallback((ruleId: string) => {
     setStore((prev) => ({
       ...prev,
@@ -211,6 +246,8 @@ export default function App() {
         : incoming.id,
       runs: Array.isArray(incoming.runs) ? incoming.runs : [],
       rules: Array.isArray(incoming.rules) ? incoming.rules : [],
+      patterns: incoming.patterns ?? emptyPatterns(),
+      evaluations: Array.isArray(incoming.evaluations) ? incoming.evaluations : [],
       sim: incoming.sim ?? { minutesPerTask: 60, repeatsPerMonth: 1, savingsRate: 30 },
       delegation: incoming.delegation ?? "approve",
       presetKey: incoming.presetKey ?? null,
@@ -253,7 +290,9 @@ export default function App() {
   const tabLabel: Record<Tab, string> = {
     context: c.nav.context,
     rulebook: c.nav.rulebook,
+    patterns: c.nav.patterns,
     redteam: c.nav.redteam,
+    evaluator: c.nav.evaluator,
     export: c.nav.export,
     growth: c.nav.growth,
   };
@@ -439,6 +478,15 @@ export default function App() {
                     onDelete={deleteRule}
                   />
                 ) : null}
+                {tab === "patterns" ? (
+                  <PatternsTab
+                    system={active}
+                    locale={locale}
+                    onChange={updateActive}
+                    onAddRules={addRules}
+                    notify={notify}
+                  />
+                ) : null}
                 {tab === "redteam" ? (
                   <RedteamTab
                     system={active}
@@ -453,6 +501,15 @@ export default function App() {
                       });
                     }}
                     notify={notify}
+                  />
+                ) : null}
+                {tab === "evaluator" ? (
+                  <EvaluatorTab
+                    system={active}
+                    locale={locale}
+                    notify={notify}
+                    onRecord={addEvaluation}
+                    onDelete={deleteEvaluation}
                   />
                 ) : null}
                 {tab === "export" ? (
@@ -550,4 +607,13 @@ function DeleteButton({ onDelete, locale }: { onDelete: () => void; locale: Loca
       </button>
     </span>
   );
+}
+
+function emptyPatterns(): PatternNotes {
+  return {
+    good: { ko: "", en: "" },
+    bad: { ko: "", en: "" },
+    focus: { ko: "", en: "" },
+    extracted: { ko: "", en: "" },
+  };
 }

@@ -44,6 +44,25 @@ export interface RedteamRun {
   source: "manual" | "byok";
 }
 
+export interface PatternNotes {
+  good: Bi;
+  bad: Bi;
+  focus: Bi;
+  extracted: Bi;
+}
+
+export interface Evaluation {
+  id: string;
+  at: number;
+  score: number;
+  passed: number;
+  failed: number;
+  judged: number;
+  total: number;
+  verdict: Verdict;
+  note: Bi;
+}
+
 export interface Simulator {
   minutesPerTask: number;
   repeatsPerMonth: number;
@@ -61,6 +80,8 @@ export interface WorkSystem {
   delegation: Delegation;
   rules: Rule[];
   runs: RedteamRun[];
+  patterns: PatternNotes;
+  evaluations: Evaluation[];
   sim: Simulator;
   presetKey: string | null;
   createdAt: number;

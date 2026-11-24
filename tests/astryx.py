@@ -82,7 +82,8 @@ CONTRAST_JS = """
   };
   const selectors = ['.field-hint', '.system-meta', '.muted-line', '.tab', '.rule-meta', '.meta-btn',
     '.preview', '.aside-note', '.figure-label', '.ladder-detail', '.timeline-note', '.verdict-conditional',
-    '.verdict-pass', '.byok-warning', '.field-count', '.rail-note', '.workhead-meta', '.pack-body p'];
+    '.verdict-pass', '.byok-warning', '.field-count', '.rail-note', '.workhead-meta', '.pack-body p',
+    '.rubric-text', '.section-note', '.skill-facts', '.trial-when', '.trial-counts', '.candidate-flag'];
   const out = [];
   for (const sel of selectors) {
     const el = document.querySelector(sel);
@@ -191,6 +192,52 @@ def main():
             page.wait_for_timeout(200)
             check("escape closes dialog", page.locator("dialog").count() == 0)
 
+            # level 2 and level 3 tabs: heading order, control names, contrast
+            page.click("#tab-patterns")
+            page.wait_for_timeout(300)
+            page.fill("#pattern-good", "A사 제안서. 첫 장에 상대가 잃는 시간을 적었고 가격은 4장 뒤에 두었다.")
+            page.fill("#pattern-bad", "B사 제안서. 기능 목록으로 시작했고 가격을 2장에 넣었다.")
+            page.fill(
+                "#pattern-answer",
+                "RULES\n- 첫 장을 상대가 잃는 시간으로 시작한다. (검증: 첫 문장이 상대의 손실인가)\n"
+                "- 가격은 범위 합의 뒤 4장 이후에 둔다. (검증: 가격표가 4장 뒤인가)",
+            )
+            page.wait_for_timeout(400)
+
+            HEADINGS_JS = "() => [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map(h => Number(h.tagName[1]))"
+            UNNAMED_JS = """() => {
+              const els = [...document.querySelectorAll('button, input, select, textarea, a[href]')];
+              return els.filter(el => {
+                const name = (el.getAttribute('aria-label') || el.textContent || '').trim();
+                const labelled = el.id && document.querySelector(`label[for="${el.id}"]`);
+                const wrapped = el.closest('label');
+                const title = el.getAttribute('title');
+                return !name && !labelled && !wrapped && !title;
+              }).map(el => el.tagName + '.' + el.className).slice(0, 6);
+            }"""
+
+            for tab_id, label in (("#tab-patterns", "patterns"), ("#tab-evaluator", "evaluator")):
+                page.click(tab_id)
+                page.wait_for_timeout(400)
+                levels = page.evaluate(HEADINGS_JS)
+                ordered = True
+                previous = 0
+                for level in levels:
+                    if previous and level > previous + 1:
+                        ordered = False
+                        break
+                    previous = level
+                check(f"{label} heading order", ordered, str(levels))
+                check(f"{label} controls have accessible names", not page.evaluate(UNNAMED_JS), str(page.evaluate(UNNAMED_JS)))
+
+            page.locator(".rubric-row").nth(0).locator(".mark-pass").click()
+            page.locator(".rubric-row").nth(1).locator(".mark-fail").click()
+            page.wait_for_timeout(200)
+            contrast = page.evaluate(CONTRAST_JS)
+            weak = [c for c in contrast if c["ratio"] < (3.0 if c["size"] >= 24 else 4.5)]
+            check("evaluator AA contrast on small text", not weak, str(weak[:4]))
+            check("evaluator contrast samples collected", len(contrast) >= 8, str(len(contrast)))
+
             # touch targets at 390
             page.set_viewport_size({"width": 390, "height": 844})
             page.wait_for_timeout(300)
@@ -205,6 +252,17 @@ def main():
               }).map(el => el.tagName + '.' + (el.className||'').toString().split(' ')[0] + ':' + Math.round(el.getBoundingClientRect().height)).slice(0, 8);
             }""")
             check("touch targets at least 44px", not small, str(small))
+
+            page.click("#tab-evaluator")
+            page.wait_for_timeout(300)
+            small_marks = page.evaluate("""() => {
+              const els = [...document.querySelectorAll('.rubric-row button, .candidate-actions button, .eval-record button')];
+              return els.filter(el => {
+                const r = el.getBoundingClientRect();
+                return r.width > 0 && r.height > 0 && r.height < 44;
+              }).map(el => el.textContent.trim() + ':' + Math.round(el.getBoundingClientRect().height)).slice(0, 8);
+            }""")
+            check("evaluator touch targets at least 44px", not small_marks, str(small_marks))
 
             # overflow at widths
             overflows = {}

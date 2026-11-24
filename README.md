@@ -14,10 +14,13 @@ A personal work operating system for the work you repeat, in the browser, with n
 - **규칙서** — 실수와 피드백을 규칙으로 바꾸고, 버전 메모와 검증 통과 횟수를 기록
 - **적대적 검증** — 고객, 재무, 경쟁, 개발과 법무 네 관점의 체크리스트와 반론 프롬프트
 - **AI 패키지** — Claude, ChatGPT, Gemini에 맞춘 구조화 마크다운을 원클릭 복사, `.md`와 `.json` 다운로드
+- **스킬 파일** — 같은 시스템을 공식 `SKILL.md` 규격(YAML frontmatter, Context, Rules, Red-team, Evaluator rubric)으로 미리보기, 복사, 다운로드
+- **패턴 추출** — 잘된 예와 안 된 예를 나란히 적어 비교 프롬프트를 만들고, AI가 뽑은 규칙을 검토해 규칙서에 바로 추가
+- **평가자 루브릭** — 활성 규칙과 네 관점 체크리스트로 결과물을 통과/미달 채점, 점수 자동 계산, 회차별 점수와 피드백을 로컬에 기록
 - **성장 기록** — 시스템 레벨, 검증 통과, 월 절감 시간 시뮬레이터
 - **BYOK (선택)** — 본인 OpenAI 또는 Anthropic 키를 브라우저에만 넣고 네 관점 검증을 실행
 
-프리셋 3종(B2B 제휴, PRD와 QA, 1인 프로덕트 런칭)이 기본으로 들어 있어 열자마자 쓸 수 있습니다.
+프리셋 3종(B2B 제휴, PRD와 QA, 1인 프로덕트 런칭)이 기본으로 들어 있어 열자마자 쓸 수 있습니다. 시스템 하나는 레벨 1(컨텍스트와 규칙), 레벨 2(사례 비교로 규칙 뽑기), 레벨 3(루브릭 채점과 시험 기록) 순서로 자랍니다.
 
 ## 설계 원칙
 
@@ -39,8 +42,8 @@ Vite 6, React 19, TypeScript. 폰트는 Pretendard(OFL)와 Instrument Serif(OFL)
 ## 테스트
 
 ```bash
-python3 tests/e2e.py     # 54 checks: CRUD, rules, reviews, export, import, i18n, pro modal, persistence, responsive
-python3 tests/astryx.py  # 25 checks: a11y, contrast, focus, touch targets, CSP, local-only
+python3 tests/e2e.py     # 88 checks: CRUD, rules, patterns, reviews, evaluator, export, SKILL.md, import, i18n, pro modal, persistence, responsive
+python3 tests/astryx.py  # 32 checks: a11y, contrast, focus, touch targets, heading order on every tab, CSP, local-only
 python3 tools/shoot.py   # desktop and mobile screenshots
 ```
 

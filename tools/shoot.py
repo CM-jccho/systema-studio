@@ -67,7 +67,7 @@ def main():
             page.screenshot(path=os.path.join(OUT, "desktop-context.png"), full_page=False)
             page.screenshot(path=os.path.join(OUT, "desktop-context-full.png"), full_page=True)
 
-            for name in ["rulebook", "redteam", "growth"]:
+            for name in ["rulebook", "patterns", "redteam", "evaluator", "export", "growth"]:
                 page.click(f"#tab-{name}")
                 page.wait_for_timeout(300)
                 page.screenshot(path=os.path.join(OUT, f"desktop-{name}.png"))
@@ -110,6 +110,14 @@ def main():
             page.wait_for_timeout(300)
             page.screenshot(path=os.path.join(OUT, "mobile-redteam.png"))
             page.screenshot(path=os.path.join(OUT, "mobile-redteam-full.png"), full_page=True)
+            page.click("#tab-patterns")
+            page.wait_for_timeout(300)
+            page.screenshot(path=os.path.join(OUT, "mobile-patterns.png"))
+            page.screenshot(path=os.path.join(OUT, "mobile-patterns-full.png"), full_page=True)
+            page.click("#tab-evaluator")
+            page.wait_for_timeout(300)
+            page.screenshot(path=os.path.join(OUT, "mobile-evaluator.png"))
+            page.screenshot(path=os.path.join(OUT, "mobile-evaluator-full.png"), full_page=True)
 
             overflow = page.evaluate("({sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth})")
             browser.close()

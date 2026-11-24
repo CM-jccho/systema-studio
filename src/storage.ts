@@ -21,12 +21,22 @@ function isSystem(value: unknown): value is WorkSystem {
   );
 }
 
+const emptyBi = () => ({ ko: "", en: "" });
+
 function normalize(system: WorkSystem): WorkSystem {
+  const patternSource = (system.patterns ?? {}) as Partial<WorkSystem["patterns"]>;
   return {
     ...system,
     delegation: system.delegation ?? "approve",
     sim: system.sim ?? { minutesPerTask: 60, repeatsPerMonth: 1, savingsRate: 30 },
     presetKey: system.presetKey ?? null,
+    patterns: {
+      good: patternSource.good ?? emptyBi(),
+      bad: patternSource.bad ?? emptyBi(),
+      focus: patternSource.focus ?? emptyBi(),
+      extracted: patternSource.extracted ?? emptyBi(),
+    },
+    evaluations: Array.isArray(system.evaluations) ? system.evaluations : [],
     rules: system.rules.map((rule) => ({
       ...rule,
       versions: Array.isArray(rule.versions) ? rule.versions : [],

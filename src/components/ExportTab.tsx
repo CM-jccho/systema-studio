@@ -4,6 +4,7 @@ import { copy as copyTable, pick } from "../i18n";
 import { buildPackage, buildSystemJson } from "../export";
 import { copyText, downloadFile, slugify } from "../utils";
 import { Icon } from "./ui";
+import { SkillSection } from "./SkillSection";
 
 interface Props {
   system: WorkSystem;
@@ -153,6 +154,8 @@ export function ExportTab({ system, locale, notify, onImport }: Props) {
           {text}
         </pre>
       </div>
+
+      <SkillSection system={system} locale={locale} notify={notify} />
     </div>
   );
 }

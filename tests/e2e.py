@@ -4,6 +4,7 @@ import functools
 import http.server
 import json
 import os
+import re
 import socketserver
 import sys
 import threading
@@ -174,10 +175,128 @@ def main():
             check("malformed json rejected", "읽을 수 없습니다" in page.locator(".toast").inner_text())
             os.remove(bad)
 
+            # 8c. SKILL.md export
+            page.click("#tab-export")
+            page.wait_for_timeout(300)
+            skill = page.locator(".skill-preview").inner_text()
+            front = skill.split("\n")[:3]
+            check("skill file has frontmatter", front[0].strip() == "---" and front[1].startswith("name: "))
+            check(
+                "skill name is a valid slug",
+                bool(re.match(r"^name: [a-z0-9][a-z0-9-]{0,63}$", front[1].strip())),
+                front[1],
+            )
+            check(
+                "skill includes four sections",
+                "## 규칙" in skill and "## 적대적 검증" in skill and "## 평가 루브릭" in skill and "## 컨텍스트" in skill,
+            )
+            check("skill rubric scores the rules", "| 1 |" in skill and "100" in skill)
+            page.locator(".skill-actions").get_by_role("button", name="SKILL.md 복사").click()
+            page.wait_for_timeout(300)
+            skill_clip = page.evaluate("navigator.clipboard.readText()")
+            check("skill clipboard holds the file", skill_clip.startswith("---") and "## 평가 루브릭" in skill_clip)
+            with page.expect_download() as dl3:
+                page.locator(".skill-actions").get_by_role("button", name="다운로드").click()
+            skill_file = dl3.value
+            skill_text = open(skill_file.path(), encoding="utf-8").read()
+            check(
+                "skill download is SKILL.md",
+                skill_file.suggested_filename == "SKILL.md" and skill_text.startswith("---\nname: "),
+                skill_file.suggested_filename,
+            )
+
+            # 8d. pattern extractor builds a prompt and turns the answer into rules
+            page.click("#tab-patterns")
+            page.wait_for_timeout(300)
+            check("pattern tab opens", page.locator("#pattern-good").count() == 1 and page.locator("#pattern-bad").count() == 1)
+            good_case = "A사 제안서. 첫 장에 상대가 잃는 시간을 적었고 가격은 4장 뒤에 두었다."
+            bad_case = "B사 제안서. 기능 목록으로 시작했고 가격을 2장에 넣었다."
+            page.fill("#pattern-good", good_case)
+            page.fill("#pattern-bad", bad_case)
+            page.wait_for_timeout(300)
+            pattern_prompt = page.locator(".pattern-prompt").inner_text()
+            check("pattern prompt carries both cases", good_case in pattern_prompt and bad_case in pattern_prompt)
+            check("pattern prompt asks for a RULES block", "RULES" in pattern_prompt and "DIFFERENCES" in pattern_prompt)
+            page.locator(".prompt-actions").get_by_role("button", name="프롬프트 복사").click()
+            page.wait_for_timeout(300)
+            pattern_clip = page.evaluate("navigator.clipboard.readText()")
+            check("pattern prompt copies", "[안 된 예]" in pattern_clip and good_case in pattern_clip)
+            page.fill(
+                "#pattern-answer",
+                "DIFFERENCES\n- 잘된 예는 상대의 손실로 시작했다.\n\nRULES\n"
+                "- 첫 장을 상대가 잃는 시간으로 시작한다. (검증: 첫 문장이 상대의 손실인가)\n"
+                "- 가격은 범위 합의 뒤 4장 이후에 둔다. (검증: 가격표가 4장 뒤인가)",
+            )
+            page.wait_for_timeout(400)
+            check("pattern parses two candidates", page.locator(".candidate").count() == 2)
+            check(
+                "pattern strips the check note",
+                page.locator(".candidate .input").first.input_value() == "첫 장을 상대가 잃는 시간으로 시작한다.",
+                page.locator(".candidate .input").first.input_value(),
+            )
+            rules_before = page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.find(s => s.id === JSON.parse(localStorage.getItem('systema.studio.v1')).activeId).rules.length")
+            page.get_by_role("button", name="선택한 규칙 추가").click()
+            page.wait_for_timeout(300)
+            active_now = page.evaluate("(() => { const st = JSON.parse(localStorage.getItem('systema.studio.v1')); return st.systems.find(s => s.id === st.activeId); })()")
+            check("pattern adds selected rules", len(active_now["rules"]) == rules_before + 2, f"{rules_before}->{len(active_now['rules'])}")
+            check(
+                "added rule text is saved",
+                any("첫 장을 상대가 잃는 시간으로 시작한다." == rule["text"]["ko"] for rule in active_now["rules"]),
+            )
+            check("added rule shows as duplicate", page.locator(".candidate.is-duplicate").count() == 2)
+            page.click("#tab-rulebook")
+            page.wait_for_timeout(300)
+            check("rulebook shows the extracted rule", "첫 장을 상대가 잃는 시간으로 시작한다." in page.locator(".rule-list").inner_text())
+
+            # 8e. evaluator scores the rubric and keeps the trial history
+            page.click("#tab-evaluator")
+            page.wait_for_timeout(300)
+            rubric_rows = page.locator(".rubric-row").count()
+            check("rubric built from rules and lenses", rubric_rows >= rules_before + 2, str(rubric_rows))
+            check("evaluator starts unmarked", page.locator(".eval-score").inner_text() == "0%")
+            page.locator(".rubric-row").nth(0).locator(".mark-pass").click()
+            page.locator(".rubric-row").nth(1).locator(".mark-fail").click()
+            page.wait_for_timeout(200)
+            expected = round(1 / rubric_rows * 100)
+            check("score follows the marks", page.locator(".eval-score").inner_text() == f"{expected}%", page.locator(".eval-score").inner_text())
+            check(
+                "failed row is flagged",
+                page.locator(".rubric-row").nth(1).get_attribute("class").endswith("is-fail"),
+            )
+            page.fill(".eval-record textarea", "출처 없는 수치 2개 삭제. 가격표를 4장으로 옮김.")
+            page.get_by_role("button", name="이번 회차 기록").click()
+            page.wait_for_timeout(300)
+            check("trial recorded", page.locator(".trial-row").count() == 1)
+            check("trial keeps the memo", "출처 없는 수치" in page.locator(".trial-row").first.inner_text())
+            check(
+                "trial stored in localStorage",
+                page.evaluate("(() => { const st = JSON.parse(localStorage.getItem('systema.studio.v1')); const s = st.systems.find(x => x.id === st.activeId); return s.evaluations.length === 1 && s.evaluations[0].total === %d; })()" % rubric_rows),
+            )
+            page.locator("#trial-history-title").scroll_into_view_if_needed()
+            check("trial chart drawn", page.locator(".trial-bar").count() == 1)
+            page.get_by_role("button", name="모두 통과").click()
+            page.wait_for_timeout(150)
+            check("mark all pass sets 100", page.locator(".eval-score").inner_text() == "100%")
+            page.fill(".eval-record textarea", "수치 출처 보강. 그 외 유지.")
+            page.get_by_role("button", name="이번 회차 기록").click()
+            page.wait_for_timeout(300)
+            check("second trial recorded", page.locator(".trial-row").count() == 2)
+            check("delta shown against previous", "+" in page.locator(".trial-row").first.locator(".trial-delta").inner_text())
+
             # 9. language switch
             page.get_by_role("button", name="EN").click()
             page.wait_for_timeout(200)
             check("english tab labels", page.locator("#tab-context").inner_text() == "Context")
+            check(
+                "english level tabs",
+                page.locator("#tab-patterns").inner_text() == "Patterns" and page.locator("#tab-evaluator").inner_text() == "Evaluator",
+            )
+            page.click("#tab-evaluator")
+            page.wait_for_timeout(200)
+            check("english rubric renders", page.locator(".rubric-row").count() == rubric_rows)
+            page.click("#tab-export")
+            page.wait_for_timeout(200)
+            check("english skill heading", "Skill file (SKILL.md)" in page.locator("#skill-heading").inner_text())
             page.click("#tab-context")
             page.wait_for_timeout(150)
             check("english section heading", page.locator(".section-intro h2").first.inner_text() == "Context box")
@@ -190,6 +309,15 @@ def main():
             page.wait_for_timeout(300)
             check("system count persists", page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length") == 5)
             check("active system persists", page.locator(".title-input").input_value() == "테스트 업무 시스템")
+            stored = page.evaluate("(() => { const st = JSON.parse(localStorage.getItem('systema.studio.v1')); return st.systems.find(x => x.id === st.activeId); })()")
+            check("pattern cases persist", "A사 제안서" in stored["patterns"]["good"]["ko"])
+            check("trial history persists", len(stored["evaluations"]) == 2)
+            page.click("#tab-evaluator")
+            page.wait_for_timeout(300)
+            check("history renders after reload", page.locator(".trial-row").count() == 2)
+            page.click("#tab-patterns")
+            page.wait_for_timeout(300)
+            check("pattern cases render after reload", "A사 제안서" in page.locator("#pattern-good").input_value())
 
             # 11. BYOK guard rails
             page.click("#tab-redteam")
