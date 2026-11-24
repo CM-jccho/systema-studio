@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { Locale } from "../types";
 import { copy as copyTable } from "../i18n";
-import { PRO_PACK_AVAILABLE, STORE_URL } from "../config";
+import { PRO_PACK_AVAILABLE, STORE_URL, otherStoreUrlFor, storeUrlFor } from "../config";
 import { Icon } from "./ui";
 
 export function ProModal({ locale, onClose }: { locale: Locale; onClose: () => void }) {
@@ -36,6 +36,37 @@ export function ProModal({ locale, onClose }: { locale: Locale; onClose: () => v
         </div>
         <p className="modal-intro">{c.pro.intro}</p>
 
+        <div className="pro-cta">
+          {PRO_PACK_AVAILABLE ? (
+            <>
+              <a
+                className="btn btn-primary"
+                href={storeUrlFor(locale)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {c.pro.storeCta}
+              </a>
+              <a
+                className="link-btn"
+                href={otherStoreUrlFor(locale)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {c.pro.storeAlt}
+              </a>
+              <p className="pro-price-note">{c.pro.priceNote}</p>
+            </>
+          ) : (
+            <>
+              <span className="soon">{c.pro.comingSoon}</span>
+              <a className="link-btn" href={STORE_URL} target="_blank" rel="noreferrer">
+                {c.pro.storeCta}
+              </a>
+            </>
+          )}
+        </div>
+
         <div className="pack-grid">
           {c.pro.packs.map((pack, index) => (
             <div key={pack.title} className={`pack${pack.free ? " is-free" : ""}`}>
@@ -51,6 +82,54 @@ export function ProModal({ locale, onClose }: { locale: Locale; onClose: () => v
           ))}
         </div>
 
+        <section className="pro-section" aria-labelledby="pro-howto-title">
+          <h3 id="pro-howto-title" className="pro-section-title">
+            {c.pro.howToTitle}
+          </h3>
+          <p className="pro-section-intro">{c.pro.howToIntro}</p>
+          <div className="pro-steps">
+            {c.pro.howTo.map((block, index) => (
+              <article key={block.title} className="pro-step">
+                <div className="pro-step-head">
+                  <span className="pro-step-no" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h4>{block.title}</h4>
+                    <p className="pro-step-meta">{block.meta}</p>
+                  </div>
+                </div>
+                <ol className="pro-step-list">
+                  {block.steps.map((step, stepIndex) => (
+                    <li key={step}>
+                      <span className="pro-step-num" aria-hidden="true">
+                        {stepIndex + 1}
+                      </span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+                <p className="pro-step-note">{block.note}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="pro-section" aria-labelledby="pro-tips-title">
+          <h3 id="pro-tips-title" className="pro-section-title">
+            {c.pro.tipsTitle}
+          </h3>
+          <p className="pro-section-intro">{c.pro.tipsIntro}</p>
+          <ul className="pro-tip-list">
+            {c.pro.tips.map((tip) => (
+              <li key={tip.lead}>
+                <h4>{tip.lead}</h4>
+                <p>{tip.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <div className="modal-foot">
           <div>
             <h3>{c.pro.included}</h3>
@@ -62,18 +141,6 @@ export function ProModal({ locale, onClose }: { locale: Locale; onClose: () => v
             <p className="modal-note">{c.pro.freeNote}</p>
           </div>
           <div className="modal-cta">
-            {PRO_PACK_AVAILABLE ? (
-              <a className="btn btn-primary" href={STORE_URL} target="_blank" rel="noreferrer">
-                {c.pro.storeCta}
-              </a>
-            ) : (
-              <>
-                <span className="soon">{c.pro.comingSoon}</span>
-                <a className="link-btn" href={STORE_URL} target="_blank" rel="noreferrer">
-                  {c.pro.storeCta}
-                </a>
-              </>
-            )}
             <button type="button" className="btn" onClick={onClose}>
               {c.pro.close}
             </button>

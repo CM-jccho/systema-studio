@@ -272,6 +272,24 @@ def main():
             page.click(".pro-link")
             page.wait_for_timeout(300)
             check("pro modal opens", page.locator("dialog.modal").count() == 1 and page.locator(".pack").count() == 12)
+            check("pro how-to has two ways", page.locator(".pro-step").count() == 2)
+            check(
+                "pro how-to keeps step counts",
+                page.locator(".pro-step-list").nth(0).locator("li").count() == 5
+                and page.locator(".pro-step-list").nth(1).locator("li").count() == 5,
+            )
+            check("pro tips listed", page.locator(".pro-tip-list li").count() == 4)
+            ko_links = page.eval_on_selector_all(
+                ".pro-cta a", "els => els.map(a => [a.textContent.trim(), a.href, a.target, a.rel])"
+            )
+            check(
+                "ko store links split by storefront",
+                ko_links[0][1] == "https://www.latpeed.com/products/4cJga"
+                and ko_links[1][1] == "https://jaechul4.gumroad.com/l/systema-pro-work-systems-pack"
+                and all(link[2] == "_blank" and link[3] == "noreferrer" for link in ko_links),
+                json.dumps(ko_links, ensure_ascii=False),
+            )
+            check("pro modal shows no coming soon", page.locator("dialog.modal .soon").count() == 0)
             page.click(".modal .icon-btn")
             page.wait_for_timeout(200)
             check("pro modal closes", page.locator("dialog.modal").count() == 0)

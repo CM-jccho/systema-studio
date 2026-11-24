@@ -224,7 +224,7 @@ const ko = {
     ruleTitle: "규칙별 검증 통과",
     noRules: "규칙이 없습니다.",
     proTitle: "Pro 워크 시스템 팩",
-    proIntro: "지금 쓰는 세 가지 시스템은 시작점입니다. 직무별 12종을 같은 형식으로 묶은 팩을 준비하고 있습니다.",
+    proIntro: "지금 쓰는 세 가지 시스템은 시작점입니다. 직무별 12종을 같은 형식으로 묶은 팩이 스토어에서 판매 중이며, 안에 구매 후 사용법이 들어 있습니다.",
     proCta: "팩 구성 보기",
     levels: [
       { name: "시작", detail: "컨텍스트를 처음 채웠습니다." },
@@ -248,7 +248,57 @@ const ko = {
     freeBadge: "무료 포함",
     proBadge: "Pro",
     comingSoon: "판매 준비 중",
-    storeCta: "MOA Daily 스토어에서 보기",
+    storeCta: "래피드에서 구매 (12,900원)",
+    storeAlt: "해외 결제는 Gumroad ($9.99)",
+    priceNote: "가격과 환불 조건은 스토어 페이지에 표시된 값을 따릅니다.",
+    howToTitle: "구매 후 사용법",
+    howToIntro: "ZIP을 풀면 길이 둘입니다. 하나만 하면 되고, 설치나 회원가입, API 키는 필요 없습니다.",
+    howTo: [
+      {
+        title: "웹앱으로 가져와 내 업무로 고치기",
+        meta: "추천 · 이 브라우저에서 5분",
+        steps: [
+          "SYSTEMA Studio를 엽니다. 설치도 회원가입도 없습니다.",
+          "왼쪽 「업무 시스템」 목록에서 「새 시스템」을 누릅니다.",
+          "「보내기」 탭에서 「JSON 가져오기」를 누르고 ZIP 안 json 폴더의 파일(예: 01-b2b-partnership.json)을 고릅니다. 이름과 컨텍스트, 규칙, 검증 체크리스트가 그대로 들어옵니다.",
+          "「컨텍스트」에서 목표·배경·제약·성공 기준 네 칸만 우리 상황으로 바꿉니다. 규칙은 그대로 두고 맞지 않는 것만 끕니다.",
+          "「보내기」에서 Claude·ChatGPT·Gemini 중 쓰는 도구를 고르고 「패키지 복사」를 눌러 새 대화에 붙여 넣습니다.",
+        ],
+        note: "기록은 이 브라우저의 저장 공간에만 남습니다. 서버도 계정도 없고 기기 사이에 자동으로 넘어가지 않습니다.",
+      },
+      {
+        title: "마크다운을 노션·옵시디언·사내 위키에 붙여 팀 SOP로 쓰기",
+        meta: "서식 그대로 · 팀 공유",
+        steps: [
+          "ZIP을 풀고 ko 폴더(영어는 en 폴더)의 .md 파일을 엽니다.",
+          "노션: 새 페이지에 붙여 넣으면 제목·표·체크리스트·인용이 서식 그대로 살아납니다. 12종을 한 페이지 아래 하위 페이지로 묶으면 팀 위키가 됩니다.",
+          "옵시디언: 보관함 폴더에 .md 파일을 넣으면 폴더 구조와 링크가 그대로 열립니다.",
+          "사내 위키(Confluence·Notion 팀스페이스·GitHub Wiki): 마크다운 편집 모드에서 붙여 넣습니다. 표가 깨지는 위키라면 코드블록에 원문으로 넣어 둡니다.",
+          "각 문서 끝의 AI 패키지 문단을 팀이 쓰는 AI에 붙이면 팀원이 같은 형식으로 같은 결과를 냅니다. 붙여 넣기 순서는 ko/notion-guide.md에 있습니다.",
+        ],
+        note: "문서를 고칠 때는 원본을 덮어쓰지 말고 사본을 만들어 쓰면 다음 업데이트와 비교하기 쉽습니다.",
+      },
+    ],
+    tipsTitle: "실전 활용 Tip",
+    tipsIntro: "12종을 한 번에 다 펴지 마세요. 아래 네 가지만 지켜도 반년 뒤 규칙이 남습니다.",
+    tips: [
+      {
+        lead: "1주차에는 하나만",
+        body: "가장 자주 반복하는 업무 하나만 골라 컨텍스트 네 칸을 채우고 그 업무에만 씁니다. 제안서가 많으면 05, 기획이면 02에서 시작합니다.",
+      },
+      {
+        lead: "실수한 날 규칙서에 한 줄",
+        body: "실제 산출물을 하나 만들고 아쉬웠던 지점을 규칙으로 남깁니다. 처음부터 규칙 8개를 완벽하게 쓰려 하지 말고 실패한 패턴만 쌓으세요. 한 주면 우리 조직 말투가 됩니다.",
+      },
+      {
+        lead: "발송 전 30초, 네 관점 검증",
+        body: "계약서·견적·공지처럼 되돌리기 어려운 문서는 「검증」 탭의 고객·재무·경쟁·개발/법무 체크리스트만 먼저 돌립니다. 문장을 새로 쓰지 않고 빠진 것만 찾는 용도입니다.",
+      },
+      {
+        lead: "팀에는 JSON으로 건네기",
+        body: "완성한 시스템은 「보내기」에서 JSON으로 내려 팀원에게 주고, 각자 자기 브라우저에서 가져오게 합니다. 같은 시스템을 같은 형식으로 쓰는 것이 목적입니다. 기기를 바꿀 때도 이 JSON이 백업이 됩니다.",
+      },
+    ],
     close: "닫기",
     freeNote: "지금 이 스튜디오에서 3종을 그대로 쓸 수 있습니다.",
     packs: [
@@ -536,7 +586,7 @@ const en: Copy = {
     ruleTitle: "Rules by review passes",
     noRules: "No rules yet.",
     proTitle: "Pro work systems pack",
-    proIntro: "The three systems here are a starting point. A pack of twelve role-based systems in the same format is in preparation.",
+    proIntro: "The three systems here are a starting point. The twelve role-based systems are on sale as a pack, with a how-to guide inside.",
     proCta: "See what's inside",
     levels: [
       { name: "Start", detail: "The context is filled for the first time." },
@@ -560,7 +610,57 @@ const en: Copy = {
     freeBadge: "Included free",
     proBadge: "Pro",
     comingSoon: "Preparing for sale",
-    storeCta: "View on the MOA Daily store",
+    storeCta: "Buy on Gumroad ($9.99)",
+    storeAlt: "Paying in Korea? Rapide (₩12,900)",
+    priceNote: "Prices and refund terms are the ones shown on the store page.",
+    howToTitle: "Using it after you buy",
+    howToIntro: "The ZIP gives you two ways. Pick one. No install, no account, no API key.",
+    howTo: [
+      {
+        title: "Import it into the web app and adapt it to your work",
+        meta: "Recommended · five minutes in this browser",
+        steps: [
+          "Open SYSTEMA Studio. Nothing to install, nothing to sign up for.",
+          "In the left rail under Work systems, press New system.",
+          "In the Export tab press Import JSON and choose a file from the json folder in the ZIP, for example 01-b2b-partnership.json. The name, context, rules and review checklist arrive as they are.",
+          "In Context, rewrite only the four boxes (goal, background, constraints, success criteria) for your own situation. Leave the rules alone and switch off the ones that do not fit.",
+          "In Export, pick Claude, ChatGPT or Gemini, press Copy package and paste it into a new chat.",
+        ],
+        note: "Your work stays in this browser's local storage. No server, no account, no automatic sync between devices.",
+      },
+      {
+        title: "Paste the Markdown into Notion, Obsidian or your team wiki as an SOP",
+        meta: "Formatting intact · share with a team",
+        steps: [
+          "Unzip the pack and open a .md file in the en folder (or the ko folder).",
+          "Notion: create a page and paste. Headings, tables, checklists and quotes keep their formatting. Nest the twelve systems under one parent page and you have a team wiki.",
+          "Obsidian: drop the .md files into a vault folder; the folder structure and links open as they are.",
+          "Company wiki (Confluence, a Notion teamspace, GitHub Wiki): paste in Markdown edit mode. If your wiki breaks tables, keep the raw text in a code block.",
+          "Copy the AI package section at the end of each document into the AI your team already uses, so everyone produces the same output from the same rules. The paste order is in en/notion-guide.md.",
+        ],
+        note: "When you edit, work on a copy rather than the original, so you can compare against the next update.",
+      },
+    ],
+    tipsTitle: "Practical tips",
+    tipsIntro: "Do not open all twelve at once. These four habits are what still leaves rules standing six months later.",
+    tips: [
+      {
+        lead: "Week one: one system",
+        body: "Pick the job you repeat most, fill its four context boxes and use only that one. Proposals: start at 05. Planning: start at 02.",
+      },
+      {
+        lead: "One rule on the day you miss",
+        body: "Produce one real artifact, then turn the disappointing part into a rule. Do not try to write eight perfect rules up front; collect the failures. In a week it starts to sound like your team.",
+      },
+      {
+        lead: "Thirty seconds before sending",
+        body: "For a contract, a quote or a company-wide notice, run only the four-lens review in the Redteam tab (customer, finance, competition, build/legal). Use it to find what is missing, not to rewrite sentences.",
+      },
+      {
+        lead: "Hand a finished system over as JSON",
+        body: "Export the system from the Export tab and give the file to a teammate; each person imports it into their own browser. Same system, same format, is the point. That JSON is also your backup when you change devices.",
+      },
+    ],
     close: "Close",
     freeNote: "The three free systems are already usable in this studio.",
     packs: [
