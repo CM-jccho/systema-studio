@@ -159,11 +159,22 @@ def main():
             payload = json.load(open(json_path, encoding="utf-8"))
             check("json download schema", payload.get("schema") == 1 and payload["system"]["name"]["ko"] == "테스트 업무 시스템")
 
-            # 8. import the exported json
-            page.set_input_files(".file-input", json_path)
-            page.wait_for_timeout(300)
+            # 8. import the exported json (and a pre-1.1 file without patterns/evaluations)
+            old_payload = json.load(open(json_path, encoding="utf-8"))
+            old_payload["system"].pop("patterns", None)
+            old_payload["system"].pop("evaluations", None)
+            old_path = os.path.join(ROOT, ".tmp-old.json")
+            open(old_path, "w", encoding="utf-8").write(json.dumps(old_payload, ensure_ascii=False))
+            page.set_input_files(".file-input", old_path)
+            page.wait_for_timeout(400)
             check("import adds a system", page.evaluate("JSON.parse(localStorage.getItem('systema.studio.v1')).systems.length") == 5)
             check("imported system is active", page.locator(".title-input").input_value() == "테스트 업무 시스템")
+            imported = page.evaluate("(() => { const st = JSON.parse(localStorage.getItem('systema.studio.v1')); return st.systems.find(x => x.id === st.activeId); })()")
+            check(
+                "older json gains empty pattern and trial fields",
+                imported["patterns"]["good"] == {"ko": "", "en": ""} and imported["evaluations"] == [],
+            )
+            os.remove(old_path)
 
             # 8b. malformed import is rejected
             page.click("#tab-export")

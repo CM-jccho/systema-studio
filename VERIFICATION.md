@@ -15,7 +15,7 @@
 | Check | Result |
 |---|---|
 | `npm run build` (tsc --noEmit + vite build) | pass |
-| `tests/e2e.py` (Playwright, production build) | 89 / 89 |
+| `tests/e2e.py` (Playwright, production build) | 90 / 90 |
 | `tests/astryx.py` (accessibility, security, heading order, contrast, touch) | 32 / 32 |
 | Hallmark `sloplint.mjs src --scope app --genre editorial` | 0 FAIL, 0 REFLEX, 0 WARN |
 | Live feature checks (Playwright, https://cm-jccho.github.io/systema-studio/) | 19 / 19 |
@@ -26,7 +26,7 @@
 
 ## E2E coverage
 
-Preset seeding, Korean first load, bilingual switch and persistence, blank system creation, context coverage, tab keyboard navigation, rule add / toggle / edit / version note / history, **pattern prompt carrying both cases and the RULES block, prompt copy, candidate parsing with check-note stripping, adding two rules and their duplicate flags, rulebook reflecting them**, four-lens review record, **evaluator rubric count, unmarked start, pass/fail marking, score percentage, fail-row flag, memo saved with the trial, local-storage payload, bar chart, mark-all, second trial and delta**, growth pass count and level, export preview, clipboard, Markdown and JSON downloads, **SKILL.md frontmatter, slug validity, four sections, rubric table, clipboard and `SKILL.md` download**, last-trial line after reload, JSON import, malformed JSON rejection, BYOK missing-key guard, OpenAI and Anthropic request shapes, key not persisted without consent, delete confirmation, mobile system selector, Pro modal and its how-to, responsive overflow, console errors.
+Preset seeding, Korean first load, bilingual switch and persistence, blank system creation, context coverage, tab keyboard navigation, rule add / toggle / edit / version note / history, **pattern prompt carrying both cases and the RULES block, prompt copy, candidate parsing with check-note stripping, adding two rules and their duplicate flags, rulebook reflecting them**, four-lens review record, **evaluator rubric count, unmarked start, pass/fail marking, score percentage, fail-row flag, memo saved with the trial, local-storage payload, bar chart, mark-all, second trial and delta**, growth pass count and level, export preview, clipboard, Markdown and JSON downloads, **SKILL.md frontmatter, slug validity, four sections, rubric table, clipboard and `SKILL.md` download**, last-trial line after reload, JSON import (including a pre-1.1 file without the new fields), malformed JSON rejection, BYOK missing-key guard, OpenAI and Anthropic request shapes, key not persisted without consent, delete confirmation, mobile system selector, Pro modal and its how-to, responsive overflow, console errors.
 
 ## Astryx coverage
 
