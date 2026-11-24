@@ -181,7 +181,8 @@ export function PatternsTab({ system, locale, onChange, onAddRules, notify }: Pr
         <div className="preview-head">
           <h3 id="pattern-candidates-title">{c.patterns.candidates}</h3>
           <span className="field-count">
-            {freshCount} {c.patterns.newRules}
+            {freshCount}
+            {locale === "ko" ? "개" : ""} {c.patterns.newRules}
           </span>
         </div>
 

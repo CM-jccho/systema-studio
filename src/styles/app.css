@@ -2689,6 +2689,12 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .skill-block .preview-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+
   .rubric-row {
     grid-template-columns: minmax(0, 1fr) auto;
   }

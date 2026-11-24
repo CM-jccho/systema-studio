@@ -655,7 +655,7 @@ const en: Copy = {
     needSelect: "Select at least one rule to add.",
     duplicate: "Already a rule",
     existing: "Existing rules",
-    newRules: "New rules",
+    newRules: "new rules",
   },
   evaluator: {
     title: "Scoring and test log",

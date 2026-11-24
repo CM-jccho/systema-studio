@@ -245,7 +245,7 @@ export function EvaluatorTab({ system, locale, notify, onRecord, onDelete }: Pro
             {c.evaluator.record}
           </button>
           <span className="muted-line">
-            {c.evaluator.score} {score}% · {c.verdicts[verdict]}
+            {c.evaluator.score} {score}%, {c.verdicts[verdict]}
           </span>
           {error ? (
             <span className="error-line" role="alert">
